@@ -325,6 +325,7 @@ class TestGenerator extends AbstractGenerator
                 'namespace'          => $namespace,
                 'namespaceSeparator' => !empty($namespace) ? '\\' : '',
                 'className'          => $this->inClassName['className'],
+                'attributeName'      => lcfirst($this->inClassName['className']),
                 'testClassName'      => $this->outClassName['className'],
                 'methods'            => $methods . $incompleteMethods,
                 'date'               => date('Y-m-d'),

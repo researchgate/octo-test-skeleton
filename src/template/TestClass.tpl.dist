@@ -9,9 +9,9 @@ class {testClassName} extends TestCase {
     /**
      * @var {className}
      */
-    private $object;
+    private ${attributeName};
 
     protected function setUp() {
-        $this->object = new {className}();
+        $this->{attributeName} = new {className}();
     }
 {methods}}
