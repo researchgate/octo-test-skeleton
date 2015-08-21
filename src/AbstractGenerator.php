@@ -125,6 +125,8 @@ abstract class AbstractGenerator
      * Generates the code and writes it to a source file.
      *
      * @param string $file
+     *
+     * @return string
      */
     public function write($file = '')
     {
@@ -133,6 +135,7 @@ abstract class AbstractGenerator
         }
 
         file_put_contents($file, $this->generate());
+        return $file;
     }
 
     /**
