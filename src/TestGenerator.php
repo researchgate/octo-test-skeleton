@@ -70,6 +70,9 @@ class TestGenerator extends AbstractGenerator
      */
     public function __construct($inClassName, $inSourceFile = '', $outClassName = '', $outSourceFile = '')
     {
+        if ($inClassName[0] == "\\") {
+            $inClassName = substr($inClassName, 1);
+        }
         if (class_exists($inClassName)) {
             $reflector    = new \ReflectionClass($inClassName);
             $inSourceFile = $reflector->getFileName();
