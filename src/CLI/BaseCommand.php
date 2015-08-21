@@ -89,11 +89,11 @@ abstract class BaseCommand extends Command
         $file = $generator->getOutSourceFile();
 
         $file = str_replace('src' . DIRECTORY_SEPARATOR, 'test' . DIRECTORY_SEPARATOR, $file);
-        $generator->write($file);
         $dir = dirname($file);
         if (!is_dir($dir)) {
             mkdir($dir, 0777, true);
         }
+        $generator->write($file);
 
         $output->writeln(
             sprintf(
