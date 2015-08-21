@@ -160,6 +160,37 @@ class TestGenerator extends AbstractGenerator
 
         $methods           = '';
         $incompleteMethods = '';
+        $stubCreation = '';
+        $stubAttributes = '';
+        $imports = array();
+        $constructorParams = array();
+
+        $constructor = $class->getConstructor();
+        foreach ($constructor->getParameters() as $param) {
+            $paramClass = $param->getClass();
+            $methodTemplate = new \Text_Template(
+                sprintf(
+                    '%s%stemplate%sTestAttribute.tpl',
+                    __DIR__,
+                    DIRECTORY_SEPARATOR,
+                    DIRECTORY_SEPARATOR
+                )
+            );
+
+            $methodTemplate->setVar(array('attributeName' => $param->name));
+            $stubAttributes .= $methodTemplate->render();
+            $constructorParams[] = '$this->' . $param->name;
+
+            if ($paramClass) {
+                if ($class->getNamespaceName() !== $paramClass->getNamespaceName()) {
+                    $imports[] = sprintf("use %s;\n", $paramClass->name);
+                }
+                $stubCreation .= sprintf("        \$this->%s = \$this->getMock(%s::class);\n", $param->name, basename($paramClass->name));
+            } else {
+                $stubCreation .= sprintf("        \$this->%s = null;\n", $param->name);
+            }
+        }
+        sort($imports);
 
         foreach ($class->getMethods() as $method) {
             if (!$method->isConstructor() &&
@@ -324,7 +355,11 @@ class TestGenerator extends AbstractGenerator
             array(
                 'namespace'          => $namespace,
                 'namespaceSeparator' => !empty($namespace) ? '\\' : '',
+                'stubCreation'       => $stubCreation,
+                'stubAttributes'     => $stubAttributes,
+                'imports'            => implode($imports),
                 'className'          => $this->inClassName['className'],
+                'constructorParameters' => implode(', ', $constructorParams),
                 'attributeName'      => lcfirst($this->inClassName['className']),
                 'testClassName'      => $this->outClassName['className'],
                 'methods'            => $methods . $incompleteMethods,

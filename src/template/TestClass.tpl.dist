@@ -1,17 +1,18 @@
 <?php{namespace}
 use rg\TestCase;
-
+{imports}
 /**
  * @copyright ResearchGate GmbH
  */
 class {testClassName} extends TestCase {
-
+{stubAttributes}
     /**
      * @var {className}
      */
     private ${attributeName};
 
     protected function setUp() {
-        $this->{attributeName} = new {className}();
+{stubCreation}
+        $this->{attributeName} = new {className}({constructorParameters});
     }
 {methods}}
