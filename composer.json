@@ -1,5 +1,5 @@
 {
-    "name": "rg/phpunit-skeleton-generator",
+    "name": "rg/octo-test-skeleton",
     "description": "Tool that can generate skeleton test classes from production code classes and vice versa",
     "keywords": ["phpunit", "xunit", "testing", "skeleton"],
     "homepage": "https://github.com/sebastianbergmann/phpunit-skeleton-generator",
