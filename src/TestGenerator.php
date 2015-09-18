@@ -166,31 +166,33 @@ class TestGenerator extends AbstractGenerator
         $constructorParams = array();
 
         $constructor = $class->getConstructor();
-        foreach ($constructor->getParameters() as $param) {
-            $paramClass = $param->getClass();
-            $methodTemplate = new \Text_Template(
-                sprintf(
-                    '%s%stemplate%sTestAttribute.tpl',
-                    __DIR__,
-                    DIRECTORY_SEPARATOR,
-                    DIRECTORY_SEPARATOR
-                )
-            );
+        if ($constructor) {
+            foreach ($constructor->getParameters() as $param) {
+                $paramClass = $param->getClass();
+                $methodTemplate = new \Text_Template(
+                    sprintf(
+                        '%s%stemplate%sTestAttribute.tpl',
+                        __DIR__,
+                        DIRECTORY_SEPARATOR,
+                        DIRECTORY_SEPARATOR
+                    )
+                );
 
-            $methodTemplate->setVar(array('attributeName' => $param->name));
-            $stubAttributes .= $methodTemplate->render();
-            $constructorParams[] = '$this->' . $param->name;
+                $methodTemplate->setVar(array('attributeName' => $param->name));
+                $stubAttributes .= $methodTemplate->render();
+                $constructorParams[] = '$this->' . $param->name;
 
-            if ($paramClass) {
-                if ($class->getNamespaceName() !== $paramClass->getNamespaceName()) {
-                    $imports[] = sprintf("use %s;\n", $paramClass->name);
+                if ($paramClass) {
+                    if ($class->getNamespaceName() !== $paramClass->getNamespaceName()) {
+                        $imports[] = sprintf("use %s;\n", $paramClass->name);
+                    }
+                    $stubCreation .= sprintf("        \$this->%s = \$this->getMock(%s::class);\n", $param->name, basename($paramClass->name));
+                } else {
+                    $stubCreation .= sprintf("        \$this->%s = null;\n", $param->name);
                 }
-                $stubCreation .= sprintf("        \$this->%s = \$this->getMock(%s::class);\n", $param->name, basename($paramClass->name));
-            } else {
-                $stubCreation .= sprintf("        \$this->%s = null;\n", $param->name);
             }
+            sort($imports);
         }
-        sort($imports);
 
         foreach ($class->getMethods() as $method) {
             if (!$method->isConstructor() &&
