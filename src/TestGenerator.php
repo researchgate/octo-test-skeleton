@@ -186,7 +186,7 @@ class TestGenerator extends AbstractGenerator
                     if ($class->getNamespaceName() !== $paramClass->getNamespaceName()) {
                         $imports[] = sprintf("use %s;\n", $paramClass->name);
                     }
-                    $stubCreation .= sprintf("        \$this->%s = \$this->getMock(%s::class);\n", $param->name, basename($paramClass->name));
+                    $stubCreation .= sprintf("        \$this->%s = \$this->createMock(%s::class);\n", $param->name, basename($paramClass->name));
                 } else {
                     $stubCreation .= sprintf("        \$this->%s = null;\n", $param->name);
                 }
