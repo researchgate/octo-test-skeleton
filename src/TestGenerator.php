@@ -52,8 +52,8 @@ namespace SebastianBergmann\PHPUnit\SkeletonGenerator;
  * @link       http://www.phpunit.de/
  * @since      Class available since Release 1.0.0
  */
-class TestGenerator extends AbstractGenerator
-{
+class TestGenerator extends AbstractGenerator {
+
     /**
      * @var array
      */
@@ -66,15 +66,15 @@ class TestGenerator extends AbstractGenerator
      * @param string $inSourceFile
      * @param string $outClassName
      * @param string $outSourceFile
+     *
      * @throws \RuntimeException
      */
-    public function __construct($inClassName, $inSourceFile = '', $outClassName = '', $outSourceFile = '')
-    {
+    public function __construct($inClassName, $inSourceFile = '', $outClassName = '', $outSourceFile = '') {
         if ($inClassName[0] == "\\") {
             $inClassName = substr($inClassName, 1);
         }
         if (class_exists($inClassName)) {
-            $reflector    = new \ReflectionClass($inClassName);
+            $reflector = new \ReflectionClass($inClassName);
             $inSourceFile = $reflector->getFileName();
 
             if ($inSourceFile === false) {
@@ -152,13 +152,12 @@ class TestGenerator extends AbstractGenerator
     /**
      * @return string
      */
-    public function generate()
-    {
+    public function generate() {
         $class = new \ReflectionClass(
             $this->inClassName['fullyQualifiedClassName']
         );
 
-        $methods           = '';
+        $methods = '';
         $incompleteMethods = '';
         $stubCreation = '';
         $stubAttributes = '';
@@ -186,7 +185,11 @@ class TestGenerator extends AbstractGenerator
                     if ($class->getNamespaceName() !== $paramClass->getNamespaceName()) {
                         $imports[] = sprintf("use %s;\n", $paramClass->name);
                     }
-                    $stubCreation .= sprintf("        \$this->%s = \$this->createMock(%s::class);\n", $param->name, basename($paramClass->name));
+                    $stubCreation .= sprintf(
+                        "        \$this->%s = \$this->createMock(%s::class);\n",
+                        $param->name,
+                        basename($paramClass->name)
+                    );
                 } else {
                     $stubCreation .= sprintf("        \$this->%s = null;\n", $param->name);
                 }
@@ -198,7 +201,8 @@ class TestGenerator extends AbstractGenerator
             if (!$method->isConstructor() &&
                 !$method->isAbstract() &&
                 $method->isPublic() &&
-                $method->getDeclaringClass()->getName() == $this->inClassName['fullyQualifiedClassName']) {
+                $method->getDeclaringClass()->getName() == $this->inClassName['fullyQualifiedClassName']
+            ) {
                 $assertAnnotationFound = false;
 
                 if (preg_match_all('/@assert(.*)$/Um', $method->getDocComment(), $annotations)) {
@@ -254,16 +258,16 @@ class TestGenerator extends AbstractGenerator
                                 $template = 'TestMethodException';
                             } elseif ($assertion == 'Equals' && strtolower($matches[3]) == 'true') {
                                 $assertion = 'True';
-                                $template  = 'TestMethodBool';
+                                $template = 'TestMethodBool';
                             } elseif ($assertion == 'NotEquals' && strtolower($matches[3]) == 'true') {
                                 $assertion = 'False';
-                                $template  = 'TestMethodBool';
+                                $template = 'TestMethodBool';
                             } elseif ($assertion == 'Equals' && strtolower($matches[3]) == 'false') {
                                 $assertion = 'False';
-                                $template  = 'TestMethodBool';
+                                $template = 'TestMethodBool';
                             } elseif ($assertion == 'NotEquals' && strtolower($matches[3]) == 'false') {
                                 $assertion = 'True';
-                                $template  = 'TestMethodBool';
+                                $template = 'TestMethodBool';
                             } else {
                                 $template = 'TestMethod';
                             }
@@ -283,7 +287,7 @@ class TestGenerator extends AbstractGenerator
                             );
 
                             $origMethodName = $method->getName();
-                            $methodName     = ucfirst($origMethodName);
+                            $methodName = ucfirst($origMethodName);
 
                             if (isset($this->methodNameCounter[$methodName])) {
                                 $this->methodNameCounter[$methodName]++;
@@ -297,13 +301,13 @@ class TestGenerator extends AbstractGenerator
 
                             $methodTemplate->setVar(
                                 array(
-                                    'annotation'     => trim($annotation),
-                                    'arguments'      => $matches[1],
-                                    'assertion'      => isset($assertion) ? $assertion : '',
-                                    'expected'       => $matches[3],
+                                    'annotation' => trim($annotation),
+                                    'arguments' => $matches[1],
+                                    'assertion' => isset($assertion) ? $assertion : '',
+                                    'expected' => $matches[3],
                                     'origMethodName' => $origMethodName,
-                                    'className'      => $this->inClassName['fullyQualifiedClassName'],
-                                    'methodName'     => $methodName
+                                    'className' => $this->inClassName['fullyQualifiedClassName'],
+                                    'methodName' => $methodName
                                 )
                             );
 
@@ -326,8 +330,8 @@ class TestGenerator extends AbstractGenerator
 
                     $methodTemplate->setVar(
                         array(
-                            'className'      => $this->inClassName['fullyQualifiedClassName'],
-                            'methodName'     => $method->getName(),
+                            'className' => $this->inClassName['fullyQualifiedClassName'],
+                            'methodName' => $method->getName(),
                             'origMethodName' => $method->getName()
                         )
                     );
@@ -355,18 +359,18 @@ class TestGenerator extends AbstractGenerator
 
         $classTemplate->setVar(
             array(
-                'namespace'          => $namespace,
+                'namespace' => $namespace,
                 'namespaceSeparator' => !empty($namespace) ? '\\' : '',
-                'stubCreation'       => $stubCreation,
-                'stubAttributes'     => $stubAttributes,
-                'imports'            => implode($imports),
-                'className'          => $this->inClassName['className'],
+                'stubCreation' => $stubCreation,
+                'stubAttributes' => $stubAttributes,
+                'imports' => implode($imports),
+                'className' => $this->inClassName['className'],
                 'constructorParameters' => implode(', ', $constructorParams),
-                'attributeName'      => lcfirst($this->inClassName['className']),
-                'testClassName'      => $this->outClassName['className'],
-                'methods'            => $methods . $incompleteMethods,
-                'date'               => date('Y-m-d'),
-                'time'               => date('H:i:s')
+                'attributeName' => lcfirst($this->inClassName['className']),
+                'testClassName' => $this->outClassName['className'],
+                'methods' => $methods . $incompleteMethods,
+                'date' => date('Y-m-d'),
+                'time' => date('H:i:s')
             )
         );
 

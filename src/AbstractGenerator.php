@@ -52,8 +52,8 @@ namespace SebastianBergmann\PHPUnit\SkeletonGenerator;
  * @link       http://www.phpunit.de/
  * @since      Class available since Release 1.0.0
  */
-abstract class AbstractGenerator
-{
+abstract class AbstractGenerator {
+
     /**
      * @var array
      */
@@ -82,8 +82,7 @@ abstract class AbstractGenerator
      * @param string $outClassName
      * @param string $outSourceFile
      */
-    public function __construct($inClassName, $inSourceFile = '', $outClassName = '', $outSourceFile = '')
-    {
+    public function __construct($inClassName, $inSourceFile = '', $outClassName = '', $outSourceFile = '') {
         $this->inClassName = $this->parseFullyQualifiedClassName(
             $inClassName
         );
@@ -108,16 +107,14 @@ abstract class AbstractGenerator
     /**
      * @return string
      */
-    public function getOutClassName()
-    {
+    public function getOutClassName() {
         return $this->outClassName['fullyQualifiedClassName'];
     }
 
     /**
      * @return string
      */
-    public function getOutSourceFile()
-    {
+    public function getOutSourceFile() {
         return $this->outSourceFile;
     }
 
@@ -128,31 +125,31 @@ abstract class AbstractGenerator
      *
      * @return string
      */
-    public function write($file = '')
-    {
+    public function write($file = '') {
         if ($file == '') {
             $file = $this->outSourceFile;
         }
 
         file_put_contents($file, $this->generate());
+
         return $file;
     }
 
     /**
      * @param  string $className
+     *
      * @return array
      */
-    protected function parseFullyQualifiedClassName($className)
-    {
+    protected function parseFullyQualifiedClassName($className) {
         $result = array(
-            'namespace'               => '',
-            'className'               => $className,
+            'namespace' => '',
+            'className' => $className,
             'fullyQualifiedClassName' => $className
         );
 
         if (strpos($className, '\\') !== false) {
-            $tmp                 = explode('\\', $className);
-            $result['className'] = $tmp[count($tmp)-1];
+            $tmp = explode('\\', $className);
+            $result['className'] = $tmp[count($tmp) - 1];
             $result['namespace'] = $this->arrayToName($tmp);
         }
 
@@ -161,10 +158,10 @@ abstract class AbstractGenerator
 
     /**
      * @param  array $parts
+     *
      * @return string
      */
-    protected function arrayToName(array $parts)
-    {
+    protected function arrayToName(array $parts) {
         $result = '';
 
         if (count($parts) > 1) {
