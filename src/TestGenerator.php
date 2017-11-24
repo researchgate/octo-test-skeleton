@@ -177,7 +177,7 @@ class TestGenerator extends AbstractGenerator {
                     )
                 );
 
-                $methodTemplate->setVar(array('attributeName' => $param->name));
+                $methodTemplate->setVar(array('attributeName' => $param->name, 'class' => $this->getSimpleClassName($paramClass->name)));
                 $stubAttributes .= $methodTemplate->render();
                 $constructorParams[] = '$this->' . $param->name;
 
@@ -185,10 +185,11 @@ class TestGenerator extends AbstractGenerator {
                     if ($class->getNamespaceName() !== $paramClass->getNamespaceName()) {
                         $imports[] = sprintf("use %s;\n", $paramClass->name);
                     }
+                    $simpleClassName = $this->getSimpleClassName($paramClass->name);
                     $stubCreation .= sprintf(
                         "        \$this->%s = \$this->createMock(%s::class);\n",
                         $param->name,
-                        basename($paramClass->name)
+                        $simpleClassName
                     );
                 } else {
                     $stubCreation .= sprintf("        \$this->%s = null;\n", $param->name);
@@ -375,5 +376,9 @@ class TestGenerator extends AbstractGenerator {
         );
 
         return $classTemplate->render();
+    }
+
+    private function getSimpleClassName($className) {
+        return substr($className, strrpos($className, '\\') + 1);
     }
 }
