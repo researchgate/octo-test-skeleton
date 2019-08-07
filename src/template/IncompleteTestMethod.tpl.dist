@@ -2,6 +2,6 @@
     /**
      * @test
      */
-    public function {methodName}() {
+    public function {methodName}(): void {
 
     }

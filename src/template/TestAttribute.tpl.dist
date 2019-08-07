@@ -1,5 +1,5 @@
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|{class}
+     * @var MockObject|{class}
      */
     private ${attributeName};
