@@ -99,6 +99,8 @@ abstract class BaseCommand extends Command {
                 $file
             )
         );
+        
+        return 0;
     }
 
     /**
